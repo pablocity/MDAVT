@@ -1,1 +1,1 @@
-print("piwo")
+print("burgir")
