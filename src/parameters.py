@@ -2,11 +2,16 @@ from enum import Enum
 
 
 class GraphType(Enum):
-    pass
+
+    parallel_coords = 0
+    chosen_coords = 1
+    linear_comb = 2
 
 
 class ExportMethod(Enum):
-    pass
+
+    bitmap = 0
+    data_series = 1
 
 
 class Parameters:
