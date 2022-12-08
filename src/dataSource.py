@@ -1,6 +1,7 @@
 from data import Data
 import pathlib
 import csv
+import pandas
 
 
 class DataSource:
@@ -31,7 +32,13 @@ class DataSource:
         print('xlsx')
 
     def __parse_txt(self):
-        print('txt')
+        with open(self.file_name, mode='r') as file:
+            txtFile = pandas.read_csv(file, sep=' ')
+
+            categories = txtFile.columns.tolist()
+            values = txtFile.values.tolist()
+
+        file.close()
 
     def parse_data(self):
         if self.file_extension == '.csv':
