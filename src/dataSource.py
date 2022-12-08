@@ -14,9 +14,11 @@ class DataSource:
         with open(self.file_name, mode='r') as file:
             csvFile = csv.reader(file)
 
-            categories = csvFile.__next__()
+            data = Data
 
-            values = []
+            data.categories = csvFile.__next__()
+
+            data.values = []
 
             for lines in csvFile:
                 row = []
@@ -28,20 +30,30 @@ class DataSource:
 
         file.close()
 
+        return data
+
     def __parse_xlsx(self):
         xlsxFile = pandas.read_excel(self.file_name)
 
-        categories = xlsxFile.columns.tolist()
-        values = xlsxFile.values.tolist()
+        data = Data
+
+        data.categories = xlsxFile.columns.tolist()
+        data.values = xlsxFile.values.tolist()
+
+        return data
 
     def __parse_txt(self):
         with open(self.file_name, mode='r') as file:
             txtFile = pandas.read_csv(file, sep=' ')
 
-            categories = txtFile.columns.tolist()
-            values = txtFile.values.tolist()
+            data = Data
+
+            data.categories = txtFile.columns.tolist()
+            data.values = txtFile.values.tolist()
 
         file.close()
+
+        return data
 
     def parse_data(self):
         if self.file_extension == '.csv':
