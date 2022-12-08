@@ -1,5 +1,6 @@
 from data import Data
 import pathlib
+import csv
 
 
 class DataSource:
@@ -9,13 +10,28 @@ class DataSource:
         self.file_extension = pathlib.Path(file_name).suffix
 
     def __parse_csv(self):
-        print('.csv')
+        with open(self.file_name, mode='r') as file:
+            csvFile = csv.reader(file)
+
+            categories = csvFile.__next__()
+
+            values = []
+
+            for lines in csvFile:
+                row = []
+
+                for entry in lines:
+                    row.append(entry)
+
+                values.append(row)
+
+        file.close()
 
     def __parse_xlsx(self):
-        print('.xlsx')
+        print('xlsx')
 
     def __parse_txt(self):
-        print('.txt')
+        print('txt')
 
     def parse_data(self):
         if self.file_extension == '.csv':
