@@ -29,7 +29,10 @@ class DataSource:
         file.close()
 
     def __parse_xlsx(self):
-        print('xlsx')
+        xlsxFile = pandas.read_excel(self.file_name)
+
+        categories = xlsxFile.columns.tolist()
+        values = xlsxFile.values.tolist()
 
     def __parse_txt(self):
         with open(self.file_name, mode='r') as file:
@@ -48,4 +51,4 @@ class DataSource:
         elif self.file_extension == '.txt':
             self.__parse_txt()
         else:
-            print('Unsupported file extension')
+            return 'Unsupported file extension'
