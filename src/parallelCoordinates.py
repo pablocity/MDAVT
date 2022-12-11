@@ -8,8 +8,11 @@ class ParallelCoords(Strategy):
     renderer = Renderer
     subset = Data
 
-    def execute(self):
-        pass
+    def execute(self, params, inputData):
+        Strategy.execute(params, inputData)
+
+    def __genSubset(self, params, inputData):
+        self.subset = inputData
 
     def __render(self):
         pass
