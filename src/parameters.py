@@ -18,3 +18,4 @@ class Parameters:
 
     graph_type = GraphType
     export_method = ExportMethod
+    chosen_dimensions = [0, 0]
