@@ -1,7 +1,8 @@
+import matplotlib.pyplot as plt
+
+
 class Renderer:
-
-    def draw_line(self):
-        pass
-
-    def draw_point(self):
-        pass
+    def render(self, X, Y):
+        for y in Y:
+            plt.plot(X, y)
+        plt.show()
