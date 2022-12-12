@@ -1,18 +1,22 @@
-from renderer import Renderer
-from data import Data
-from strategy import Strategy
+from enum import Enum
+from dataclasses import dataclass
 
 
-class ParallelCoords(Strategy):
+class GraphType(Enum):
 
-    renderer = Renderer
-    subset = Data
+    parallel_coords = 0
+    chosen_coords = 1
+    linear_comb = 2
 
-    def execute(self):
-        pass
 
-    def __render(self):
-        pass
+class ExportMethod(Enum):
 
-    def __export(self):
-        pass
+    bitmap = 0
+    data_series = 1
+
+
+@dataclass
+class Parameters:
+    graph_type: GraphType
+    export_method: ExportMethod
+    chosenDimensions: list
