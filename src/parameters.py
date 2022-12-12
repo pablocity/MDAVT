@@ -1,4 +1,5 @@
 from enum import Enum
+from dataclasses import dataclass
 
 
 class GraphType(Enum):
@@ -14,7 +15,8 @@ class ExportMethod(Enum):
     data_series = 1
 
 
+@dataclass
 class Parameters:
-
-    graph_type = GraphType
-    export_method = ExportMethod
+    graph_type: GraphType
+    export_method: ExportMethod
+    chosenDimensions: list
