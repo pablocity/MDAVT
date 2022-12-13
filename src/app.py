@@ -1,14 +1,20 @@
+import os
+
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import sys
 import PlaneChosenCords2D
+import PlaneLinearComb2D
+import data
 
 from src.dataSource import DataSource
 from src.parameters import Parameters, ExportMethod, GraphType
 
 
 class App(QMainWindow):
+
+    data = data.Data()
 
     def __init__(self):
         super(QMainWindow, self).__init__()
@@ -34,7 +40,13 @@ class App(QMainWindow):
         widget.setLayout(main_layout)
         self.setCentralWidget(widget)
 
+        self.strategyTypes = ["2D Plane with chosen cords",
+                             "2D Plane Linear Combination",
+                             "Parallel Coordinates"]
+
         self.initUI()
+
+
 
     def initUI(self):
         self.setGeometry(500, 200, 1000, 600)
@@ -54,12 +66,12 @@ class App(QMainWindow):
                                           "font-weight:600;}")
 
         strategy_type_combobox = QComboBox(self)
-        strategy_type_combobox.addItems(["2D Plane with chosen cords",
-                                         "2D Plane Linear Combination",
-                                         "Parallel Coordinates"])
+        strategy_type_combobox.addItems(self.strategyTypes)
         strategy_type_combobox.setFixedWidth(165)
         strategy_type_combobox.setFixedHeight(30)
         strategy_type_combobox.setGeometry(200, 425, 200, 200)
+
+        strategyType = self.strategyTypes[strategy_type_combobox.currentIndex()]
 
         display_type_label = QLabel(self)
         display_type_label.setText("Display Type")
@@ -87,12 +99,11 @@ class App(QMainWindow):
                                       "font-size: 10pt;"
                                       "font-weight:600;}")
 
-        text_edit_field = QPlainTextEdit(self)
-        text = "File path"
-        text_edit_field.setPlainText(text)
-        text_edit_field.setFixedWidth(165)
-        text_edit_field.setFixedHeight(30)
-        text_edit_field.setGeometry(200, 505, 200, 200)
+        load_button = QPushButton('Load File', self)
+        load_button.setFixedWidth(165)
+        load_button.setFixedHeight(30)
+        load_button.setGeometry(200, 505, 200, 200)
+        load_button.clicked.connect(self.browsefiles)
 
         input_parameter_label = QLabel(self)
         input_parameter_label.setText("Parameter")
@@ -114,7 +125,20 @@ class App(QMainWindow):
         execution_button.setFixedWidth(300)
         execution_button.setFixedHeight(100)
         execution_button.setGeometry(550, 448, 200, 200)
-        #execution_button.clicked.connect(self.render())
+        execution_button.clicked.connect(self.display)
+
+    def browsefiles(self):
+        file_filter = 'Data File (*.xlsx *.csv *.dat)'
+        selected_file = QFileDialog.getOpenFileName(caption='Select a data file', directory=os.getcwd(),
+                                    filter=file_filter)
+
+        data_source = DataSource(selected_file[0])
+        self.data = data_source.parse_data()
+
+    def display(self):
+        cords = PlaneChosenCords2D.ChosenCords()
+        params = Parameters(GraphType.chosen_coords, ExportMethod.bitmap, [1, 3])
+        cords.execute(params, self.data)
 
 
 class Color(QWidget):
@@ -135,11 +159,6 @@ def window():
     app.exec_()
 
 
-#window()
+window()
 
-data_source = DataSource(r"C:\Users\Daniel\Desktop\wine.csv")
-data = data_source.parse_data()
-cords = PlaneChosenCords2D.ChosenCords()
-params = Parameters(GraphType.chosen_coords, ExportMethod.bitmap, [1, 3])
-cords.execute(params, data)
-#print()
+
