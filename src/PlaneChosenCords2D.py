@@ -15,11 +15,16 @@ class ChosenCords(Strategy):
 
     def genSubset(self, params, inputData: Data):
         dim = params.chosenDimensions
-        self.subset = inputData.values[dim[0]: dim[1]]
-        self.categories = inputData.categories
+
+        for row in inputData.values:
+            self.subset.values[dim[0]].append(row[dim[0]])
+            self.subset.values[dim[1]].append(row[dim[1]])
+
+        self.subset.categories.append(inputData.categories[dim[0]])
+        self.subset.categories.append(inputData.categories[dim[1]])
 
     def render(self):
-        self.renderer.render(self, self.categories, self.subset)
+        self.renderer.render(self, self.subset.values[0], self.subset.values[1])
 
     def export(self):
         pass
