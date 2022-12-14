@@ -13,6 +13,9 @@ The aim of this project is to develop a tool for visualizing multidimentional da
 
 ## Technological Stack
 
-- Python (probably)
+- Python with supported libraries (pandas, matplotlib, PyQt5)
 - Git as version control tool
-- Github Actions (CI / CD)
+- Jira as issue tracker
+
+Jira:
+https://polsl.atlassian.net/jira/software/projects/MDAVT/boards/1/backlog
