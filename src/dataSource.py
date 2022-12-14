@@ -26,7 +26,7 @@ class DataSource:
                 for entry in lines:
                     row.append(entry)
 
-                values.append(row)
+                data.values.append(row)
 
         file.close()
 
@@ -57,10 +57,10 @@ class DataSource:
 
     def parse_data(self):
         if self.file_extension == '.csv':
-            self.__parse_csv()
+            return self.__parse_csv()
         elif self.file_extension == '.xlsx':
-            self.__parse_xlsx()
+            return self.__parse_xlsx()
         elif self.file_extension == '.txt':
-            self.__parse_txt()
+            return self.__parse_txt()
         else:
             return 'Unsupported file extension'
