@@ -1,6 +1,5 @@
 from data import Data
 import pathlib
-import csv
 import pandas
 
 
@@ -12,21 +11,12 @@ class DataSource:
 
     def __parse_csv(self):
         with open(self.file_name, mode='r') as file:
-            csvFile = csv.reader(file)
+            csvFile = pandas.read_csv(file)
 
             data = Data
 
-            data.categories = csvFile.__next__()
-
-            data.values = []
-
-            for lines in csvFile:
-                row = []
-
-                for entry in lines:
-                    row.append(float(entry))
-
-                data.values.append(row)
+            data.categories = csvFile.columns.tolist()
+            data.values = csvFile.values.tolist()
 
         file.close()
 
