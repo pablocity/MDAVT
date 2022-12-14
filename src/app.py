@@ -2,6 +2,10 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import sys
+import PlaneChosenCords2D
+
+from src.dataSource import DataSource
+from src.parameters import Parameters, ExportMethod, GraphType
 
 
 class App(QMainWindow):
@@ -110,6 +114,7 @@ class App(QMainWindow):
         execution_button.setFixedWidth(300)
         execution_button.setFixedHeight(100)
         execution_button.setGeometry(550, 448, 200, 200)
+        #execution_button.clicked.connect(self.render())
 
 
 class Color(QWidget):
@@ -130,4 +135,11 @@ def window():
     app.exec_()
 
 
-window()
+#window()
+
+data_source = DataSource(r"C:\Users\Daniel\Desktop\wine.csv")
+data = data_source.parse_data()
+cords = PlaneChosenCords2D.ChosenCords()
+params = Parameters(GraphType.chosen_coords, ExportMethod.bitmap, [1, 3])
+cords.execute(params, data)
+#print()
