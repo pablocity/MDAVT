@@ -24,7 +24,7 @@ class DataSource:
                 row = []
 
                 for entry in lines:
-                    row.append(entry)
+                    row.append(float(entry))
 
                 data.values.append(row)
 
