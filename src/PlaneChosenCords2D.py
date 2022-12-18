@@ -17,8 +17,11 @@ class ChosenCords(Strategy):
         dim = params.chosenDimensions
 
         for row in inputData.values:
-            self.subset.values[dim[0]].append(row[dim[0]])
-            self.subset.values[dim[1]].append(row[dim[1]])
+            for idx, val in enumerate(row):
+                if idx == params.chosenDimensions[0]:
+                    self.subset.values[0].append(val)
+                elif idx == params.chosenDimensions[1]:
+                    self.subset.values[1].append(val)
 
         self.subset.categories.append(inputData.categories[dim[0]])
         self.subset.categories.append(inputData.categories[dim[1]])

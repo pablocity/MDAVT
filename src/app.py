@@ -7,6 +7,7 @@ import sys
 import PlaneChosenCords2D
 import PlaneLinearComb2D
 import data
+from src import parameters
 
 from src.dataSource import DataSource
 from src.parameters import Parameters, ExportMethod, GraphType
@@ -40,13 +41,27 @@ class App(QMainWindow):
         widget.setLayout(main_layout)
         self.setCentralWidget(widget)
 
-        self.strategyTypes = ["2D Plane with chosen cords",
-                             "2D Plane Linear Combination",
-                             "Parallel Coordinates"]
+        self.strategies = [
+            ("2D Plane with chosen cords", PlaneChosenCords2D.ChosenCords, GraphType.chosen_coords),
+            ("2D Plane Linear Combination", PlaneLinearComb2D.LinearComb, GraphType.linear_comb),
+            ("Parallel Coordinates", None, GraphType.parallel_coords),
+        ]
+
+        self.exports = [
+            ("Bitmap", ExportMethod.bitmap),
+            ("Data series", ExportMethod.data_series)
+        ]
+
+        self.exportMethods = list(map(lambda x: x[0], self.exports))
+
+        self.strategyTypes = list(map(lambda x: x[0], self.strategies))
+
+        self.exportMethod = self.exports[0][1]
+
+        self.cords = self.strategies[0][1]()
+        self.cords_type = self.strategies[0][2]
 
         self.initUI()
-
-
 
     def initUI(self):
         self.setGeometry(500, 200, 1000, 600)
@@ -70,11 +85,10 @@ class App(QMainWindow):
         strategy_type_combobox.setFixedWidth(165)
         strategy_type_combobox.setFixedHeight(30)
         strategy_type_combobox.setGeometry(200, 425, 200, 200)
-
-        strategyType = self.strategyTypes[strategy_type_combobox.currentIndex()]
+        strategy_type_combobox.currentIndexChanged.connect(self.strategy_index_changed)
 
         display_type_label = QLabel(self)
-        display_type_label.setText("Display Type")
+        display_type_label.setText("Export Type")
         display_type_label.setFixedWidth(165)
         display_type_label.setFixedHeight(30)
         display_type_label.setGeometry(90, 465, 200, 200)
@@ -84,10 +98,11 @@ class App(QMainWindow):
                                          "font-weight:600;}")
 
         display_type_combobox = QComboBox(self)
-        display_type_combobox.addItems(["Graph", "Data Series"])
+        display_type_combobox.addItems(self.exportMethods)
         display_type_combobox.setFixedWidth(165)
         display_type_combobox.setFixedHeight(30)
         display_type_combobox.setGeometry(200, 465, 200, 200)
+        display_type_combobox.currentIndexChanged.connect(self.export_index_changed)
 
         text_edit_label = QLabel(self)
         text_edit_label.setText("Open File")
@@ -127,6 +142,13 @@ class App(QMainWindow):
         execution_button.setGeometry(550, 448, 200, 200)
         execution_button.clicked.connect(self.display)
 
+    def strategy_index_changed(self, index):
+        self.cords = self.strategies[index][1]()
+        self.cords_type = self.strategies[index][2]
+
+    def export_index_changed(self, index):
+        self.exportMethod = self.exports[index][1]
+
     def browsefiles(self):
         file_filter = 'Data File (*.xlsx *.csv *.dat)'
         selected_file = QFileDialog.getOpenFileName(caption='Select a data file', directory=os.getcwd(),
@@ -136,9 +158,8 @@ class App(QMainWindow):
         self.data = data_source.parse_data()
 
     def display(self):
-        cords = PlaneChosenCords2D.ChosenCords()
-        params = Parameters(GraphType.chosen_coords, ExportMethod.bitmap, [1, 3])
-        cords.execute(params, self.data)
+        params = Parameters(self.cords_type, self.exportMethod, [1, 3])
+        self.cords.execute(params, self.data)
 
 
 class Color(QWidget):
