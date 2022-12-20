@@ -1,20 +1,18 @@
 from renderer import Renderer
 from data import Data
 from strategy import Strategy
-from parameters import Parameters
 
 
-class ChosenCords(Strategy):
-
+class LinearComb(Strategy):
     renderer = Renderer
     subset = Data
-    categories = []
 
     def execute(self, params, inputData):
         super().execute(params, inputData)
 
-    def genSubset(self, params, inputData: Data):
+    def genSubset(self, params, inputData):
         dim = params.chosenDimensions
+        sum = [[] for x in range(len(inputData.values[0]))]
 
         for row in inputData.values:
             for idx, val in enumerate(row):
@@ -22,12 +20,18 @@ class ChosenCords(Strategy):
                     self.subset.values[0].append(val)
                 elif idx == params.chosenDimensions[1]:
                     self.subset.values[1].append(val)
+                else:
+                    val *= inputData.values[idx][-2]
+                    sum[int(inputData.values[idx][-1])].append(val)
 
         self.subset.categories.append(inputData.categories[dim[0]])
         self.subset.categories.append(inputData.categories[dim[1]])
 
+        self.subset.values[0] += sum[0]
+        self.subset.values[1] += sum[1]
+
     def render(self):
-        self.renderer.render(self, self.subset.values[0], self.subset.values[1])
+        pass
 
     def export(self):
         pass
