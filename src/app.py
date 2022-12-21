@@ -23,6 +23,7 @@ class App(QMainWindow):
         main_layout = QGridLayout()
         border = QGridLayout()
         input_layout = QGridLayout()
+        self.execution_button = None
 
         main_layout.addWidget(Color('black'), 0, 0, 4, 2)
         main_layout.setSpacing(0)
@@ -141,6 +142,8 @@ class App(QMainWindow):
         execution_button.setFixedHeight(100)
         execution_button.setGeometry(550, 448, 200, 200)
         execution_button.clicked.connect(self.display)
+        execution_button.setDisabled(True)
+        self.execution_button = execution_button
 
     def strategy_index_changed(self, index):
         self.cords = self.strategies[index][1]()
@@ -156,6 +159,7 @@ class App(QMainWindow):
 
         data_source = DataSource(selected_file[0])
         self.data = data_source.parse_data()
+        self.execution_button.setDisabled(False)
 
     def display(self):
         params = Parameters(self.cords_type, self.exportMethod, [1, 3])
