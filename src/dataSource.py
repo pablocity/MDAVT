@@ -13,6 +13,8 @@ class DataSource:
         with open(self.file_name, mode='r') as file:
             csvFile = pandas.read_csv(file)
 
+            csvFile = csvFile.select_dtypes(include='number')
+
             data = Data
 
             data.categories = csvFile.columns.tolist()
@@ -25,6 +27,8 @@ class DataSource:
     def __parse_xlsx(self):
         xlsxFile = pandas.read_excel(self.file_name)
 
+        xlsxFile = xlsxFile.select_dtypes(include='number')
+
         data = Data
 
         data.categories = xlsxFile.columns.tolist()
@@ -35,6 +39,8 @@ class DataSource:
     def __parse_txt(self):
         with open(self.file_name, mode='r') as file:
             txtFile = pandas.read_csv(file, sep=' ')
+
+            txtFile = txtFile.select_dtypes(include='number')
 
             data = Data
 
