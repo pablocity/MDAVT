@@ -150,7 +150,7 @@ class App(QMainWindow):
         self.exportMethod = self.exports[index][1]
 
     def browsefiles(self):
-        file_filter = 'Data File (*.xlsx *.csv *.dat)'
+        file_filter = 'Data File (*.xlsx *.csv *.txt)'
         selected_file = QFileDialog.getOpenFileName(caption='Select a data file', directory=os.getcwd(),
                                     filter=file_filter)
 
