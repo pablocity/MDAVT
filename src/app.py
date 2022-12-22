@@ -161,6 +161,14 @@ class App(QMainWindow):
         self.data = data_source.parse_data()
         self.execution_button.setDisabled(False)
 
+    def display_message(self, text):
+        message = QMessageBox()
+        message.setIcon(QMessageBox.Critical)
+        message.setText(text)
+        message.setWindowTitle("Critical MessageBox")
+        message.setStandardButtons(QMessageBox.Ok)
+        retval = message.exec_()
+
     def display(self):
         params = Parameters(self.cords_type, self.exportMethod, [1, 3])
         self.cords.execute(params, self.data)
