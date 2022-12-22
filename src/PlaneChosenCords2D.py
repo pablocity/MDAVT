@@ -14,13 +14,13 @@ class ChosenCords(Strategy):
         super().execute(params, inputData)
 
     def genSubset(self, params, inputData: Data):
-        dim = params.chosenDimensions
+        dim = params.chosen_dimensions
 
         for row in inputData.values:
             for idx, val in enumerate(row):
-                if idx == params.chosenDimensions[0]:
+                if idx == params.chosen_dimensions[0]:
                     self.subset.values[0].append(val)
-                elif idx == params.chosenDimensions[1]:
+                elif idx == params.chosen_dimensions[1]:
                     self.subset.values[1].append(val)
 
         self.subset.categories.append(inputData.categories[dim[0]])

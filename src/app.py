@@ -23,6 +23,8 @@ class App(QMainWindow):
         main_layout = QGridLayout()
         border = QGridLayout()
         input_layout = QGridLayout()
+        self.execution_button = None
+        self.input_parameter_field = None
 
         main_layout.addWidget(Color('black'), 0, 0, 4, 2)
         main_layout.setSpacing(0)
@@ -134,6 +136,7 @@ class App(QMainWindow):
         input_parameter_field.setFixedWidth(165)
         input_parameter_field.setFixedHeight(30)
         input_parameter_field.setGeometry(200, 545, 200, 200)
+        self.input_parameter_field = input_parameter_field
 
         execution_button = QPushButton('Display', self)
         execution_button.setStyleSheet("QPushButton { color : black;font-size: 16pt; }")
@@ -141,6 +144,8 @@ class App(QMainWindow):
         execution_button.setFixedHeight(100)
         execution_button.setGeometry(550, 448, 200, 200)
         execution_button.clicked.connect(self.display)
+        execution_button.setDisabled(True)
+        self.execution_button = execution_button
 
     def strategy_index_changed(self, index):
         self.cords = self.strategies[index][1]()
@@ -150,15 +155,45 @@ class App(QMainWindow):
         self.exportMethod = self.exports[index][1]
 
     def browsefiles(self):
-        file_filter = 'Data File (*.xlsx *.csv *.dat)'
+        file_filter = 'Data File (*.xlsx *.csv *.txt)'
         selected_file = QFileDialog.getOpenFileName(caption='Select a data file', directory=os.getcwd(),
                                     filter=file_filter)
 
         data_source = DataSource(selected_file[0])
         self.data = data_source.parse_data()
+        self.execution_button.setDisabled(False)
+
+    def display_message(self, text):
+        message = QMessageBox()
+        message.setIcon(QMessageBox.Critical)
+        message.setText(text)
+        message.setWindowTitle("Critical MessageBox")
+        message.setStandardButtons(QMessageBox.Ok)
+        retval = message.exec_()
 
     def display(self):
-        params = Parameters(self.cords_type, self.exportMethod, [1, 3])
+        given_params = self.input_parameter_field.toPlainText().split(",")
+
+        if len(given_params) < 2:
+            self.display_message("Two coordinates must be passed")
+            return
+
+        if given_params[0] == given_params[1]:
+            self.display_message("Arguments must be different")
+            return
+
+        if not given_params[0].isdigit() or not given_params[1].isdigit():
+            self.display_message("Arguments must be integers")
+            return
+
+        coord_x = int(given_params[0]) - 1
+        coord_y = int(given_params[1]) - 1
+
+        if (coord_x < 0 or coord_x > len(self.data.categories)) or (coord_y < 0 or coord_y > len(self.data.categories)):
+            self.display_message("Arguments out of range (lower than 1 or higher than number of available coordinates)")
+            return
+
+        params = Parameters(self.cords_type, self.exportMethod, [coord_x, coord_y])
         self.cords.execute(params, self.data)
 
 
